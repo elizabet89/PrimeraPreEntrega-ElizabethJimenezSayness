@@ -9,8 +9,8 @@ app.use(express.json());
 // Rutas para el manejo de productos
 const productsRouter = express.Router();
 
-// Ruta raíz GET
-productsRouter.get('./', (req, res) => {
+// Ruta raíz GET /api/products/
+productsRouter.get('/api/products/', (req, res) => {
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -22,8 +22,8 @@ productsRouter.get('./', (req, res) => {
   });
 });
 
-// Ruta GET :pid
-productsRouter.get('./:pid', (req, res) => {
+// Ruta GET /api/products/:pid
+productsRouter.get('api/products/:pid', (req, res) => {
   const productId = req.params.pid;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
@@ -41,8 +41,8 @@ productsRouter.get('./:pid', (req, res) => {
   });
 });
 
-// Ruta POST 
-productsRouter.post('./', (req, res) => {
+// Ruta POST /api/products/
+productsRouter.post('api/products/', (req, res) => {
   const product = req.body;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
@@ -66,7 +66,7 @@ productsRouter.post('./', (req, res) => {
 });
 
 // Ruta PUT /api/products/:pid
-productsRouter.put('./:pid', (req, res) => {
+productsRouter.put('/api/products/:pid', (req, res) => {
   const productId = req.params.pid;
   const updatedProduct = req.body;
   fs.readFile('productos.json', 'utf8', (err, data) => {
@@ -93,8 +93,8 @@ productsRouter.put('./:pid', (req, res) => {
   });
 });
 
-// Ruta DELETE /:pid
-productsRouter.delete('./:pid', (req, res) => {
+// Ruta DELETE /api/products/:pid
+productsRouter.delete('/api/products/:pid', (req, res) => {
   const productId = req.params.pid;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
@@ -115,13 +115,13 @@ productsRouter.delete('./:pid', (req, res) => {
   });
 });
 
-app.use('./', productsRouter);
+app.use('/api/products', productsRouter);
 
 // Rutas para el carrito
 const cartsRouter = express.Router();
 
-// Ruta POST 
-cartsRouter.post('./', (req, res) => {
+// Ruta POST /api/carts/
+cartsRouter.post('/api/carts/', (req, res) => {
   const cart = req.body;
   fs.readFile('carrito.json', 'utf8', (err, data) => {
     if (err) {
@@ -145,7 +145,7 @@ cartsRouter.post('./', (req, res) => {
 });
 
 // Ruta GET /api/carts/:cid
-cartsRouter.get('./:cid', (req, res) => {
+cartsRouter.get('/api/carts/:cid', (req, res) => {
   const cartId = req.params.cid;
   fs.readFile('carrito.json', 'utf8', (err, data) => {
     if (err) {
@@ -164,7 +164,7 @@ cartsRouter.get('./:cid', (req, res) => {
 });
 
 // Ruta POST /api/carts/:cid/product/:pid
-cartsRouter.post('./:cid/./:pid', (req, res) => {
+cartsRouter.post('/api/carts/:cid/product/:pid', (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
   const quantity = req.body.quantity || 1;
@@ -198,7 +198,7 @@ cartsRouter.post('./:cid/./:pid', (req, res) => {
   });
 });
 
-app.use('./', cartsRouter);
+app.use('/api/carts', cartsRouter);
 
 // Función para generar un nuevo ID de producto
 function generateProductId(products) {
