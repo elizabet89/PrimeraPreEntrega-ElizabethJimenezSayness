@@ -13,8 +13,8 @@ const productsRouter = express.Router();
 productsRouter.get('/api/products/', (req, res) => {
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+    
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       const products = JSON.parse(data);
       res.json(products);
@@ -27,8 +27,8 @@ productsRouter.get('api/products/:pid', (req, res) => {
   const productId = req.params.pid;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+     
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       const products = JSON.parse(data);
       const product = products.find((p) => p.id === productId);
@@ -46,8 +46,8 @@ productsRouter.post('api/products/', (req, res) => {
   const product = req.body;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+   
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       const products = JSON.parse(data);
       const newProductId = generateProductId(products);
@@ -55,8 +55,8 @@ productsRouter.post('api/products/', (req, res) => {
       products.push(product);
       fs.writeFile('productos.json', JSON.stringify(products), (err) => {
         if (err) {
-          console.error(err);
-          res.status(500).send('Error interno del servidor');
+         
+          res.status(500).send('Error interno del servidor'+err);
         } else {
           res.json(product);
         }
@@ -71,8 +71,8 @@ productsRouter.put('/api/products/:pid', (req, res) => {
   const updatedProduct = req.body;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+    
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       const products = JSON.parse(data);
       const productIndex = products.findIndex((p) => p.id === productId);
@@ -80,8 +80,8 @@ productsRouter.put('/api/products/:pid', (req, res) => {
         products[productIndex] = { ...products[productIndex], ...updatedProduct, id: productId };
         fs.writeFile('productos.json', JSON.stringify(products), (err) => {
           if (err) {
-            console.error(err);
-            res.status(500).send('Error interno del servidor');
+         
+            res.status(500).send('Error interno del servidor'+err);
           } else {
             res.json(products[productIndex]);
           }
@@ -98,15 +98,15 @@ productsRouter.delete('/api/products/:pid', (req, res) => {
   const productId = req.params.pid;
   fs.readFile('productos.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+   
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       let products = JSON.parse(data);
       products = products.filter((p) => p.id !== productId);
       fs.writeFile('productos.json', JSON.stringify(products), (err) => {
         if (err) {
-          console.error(err);
-          res.status(500).send('Error interno del servidor');
+       
+          res.status(500).send('Error interno del servidor'+err);
         } else {
           res.sendStatus(204);
         }
@@ -125,8 +125,8 @@ cartsRouter.post('/api/carts/', (req, res) => {
   const cart = req.body;
   fs.readFile('carrito.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+    
+      res.status(500).send('Error interno del servidor'+err);
     } else {
       const carts = JSON.parse(data);
       const newCartId = generateCartId(carts);
@@ -134,8 +134,8 @@ cartsRouter.post('/api/carts/', (req, res) => {
       carts.push(cart);
       fs.writeFile('carrito.json', JSON.stringify(carts), (err) => {
         if (err) {
-          console.error(err);
-          res.status(500).send('Error interno del servidor');
+       
+          res.status(500).send('Error interno del servidor'+ err);
         } else {
           res.json(cart);
         }
@@ -149,8 +149,8 @@ cartsRouter.get('/api/carts/:cid', (req, res) => {
   const cartId = req.params.cid;
   fs.readFile('carrito.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+  
+      res.status(500).send('Error interno del servidor'+ err);
     } else {
       const carts = JSON.parse(data);
       const cart = carts.find((c) => c.id === cartId);
@@ -170,8 +170,7 @@ cartsRouter.post('/api/carts/:cid/product/:pid', (req, res) => {
   const quantity = req.body.quantity || 1;
   fs.readFile('carrito.json', 'utf8', (err, data) => {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error interno del servidor');
+      res.status(500).send('Error interno del servidor' +err);
     } else {
       let carts = JSON.parse(data);
       const cartIndex = carts.findIndex((c) => c.id === cartId);
@@ -185,8 +184,7 @@ cartsRouter.post('/api/carts/:cid/product/:pid', (req, res) => {
         }
         fs.writeFile('carrito.json', JSON.stringify(carts), (err) => {
           if (err) {
-            console.error(err);
-            res.status(500).send('Error interno del servidor');
+            res.status(500).send('Error interno del servidor'+ err);
           } else {
             res.json(cart.products);
           }
@@ -226,5 +224,5 @@ function generateId() {
 }
 
 app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
+  return (`Servidor escuchando en el puerto ${port}`);
 });
