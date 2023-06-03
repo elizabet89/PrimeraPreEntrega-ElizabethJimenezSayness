@@ -2,14 +2,12 @@ const express = require('express');
 const fs = require('fs');
 const cartsRouter = express.Router();
 
-///============
-const CartManager = require('../cartManager');
+const CartManager= require('../cartManager');
 
 const cartManager = new CartManager();
-//==============
 
 // Ruta raíz POST /api/carts
-  cartsRouter.post('/', (req, res) => {
+cartsRouter.post('/', (req, res) => {
   const { products } = req.body;
   const newCart = cartManager.createCart(products);
 
@@ -27,7 +25,6 @@ cartsRouter.get('/:cid', (req, res) => {
   } else {
     res.status(404).json({ error: 'Cart not found' });
   }
- 
 });
 
 // Ruta POST /api/carts/:cid/product/:pid
@@ -44,4 +41,5 @@ cartsRouter.post('/:cid/product/:pid', (req, res) => {
   }
 });
 
+module.exports = cartsRouter;
 
