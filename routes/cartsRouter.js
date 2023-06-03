@@ -1,60 +1,47 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
+const cartsRouter = express.Router();
+
+///============
+const CartManager = require('../cartManager');
+
+const cartManager = new CartManager();
+//==============
 
 // Ruta raíz POST /api/carts
-router.post('/', (req, res) => {
-  
-  const carts = JSON.parse(fs.readFileSync('carrito.json', 'utf-8'));
- 
-  const newId = generateId();
+  cartsRouter.post('/', (req, res) => {
+  const { products } = req.body;
+  const newCart = cartManager.createCart(products);
 
-  const newCart = {
-    id: newId,
-    products: [],
-  };
-
-  carts.push(newCart);
- 
-  fs.writeFileSync('carrito.json', JSON.stringify(carts));
   res.json(newCart);
 });
 
 // Ruta GET /api/carts/:cid
-router.get('/:cid', (req, res) => {
-  const cartId = req.params.cid;
+cartsRouter.get('/:cid', (req, res) => {
+  const { cid } = req.params;
 
-  const carts = JSON.parse(fs.readFileSync('carrito.json', 'utf-8'));
-  const cart = carts.find((c) => c.id === cartId);
-  res.json(cart);
+  const cart = cartManager.getCartById(cid);
+
+  if (cart) {
+    res.json(cart.products);
+  } else {
+    res.status(404).json({ error: 'Cart not found' });
+  }
+ 
 });
 
 // Ruta POST /api/carts/:cid/product/:pid
-router.post('/:cid/product/:pid', (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
+cartsRouter.post('/:cid/product/:pid', (req, res) => {
+  const { cid, pid } = req.params;
   const { quantity } = req.body;
 
-  const carts = JSON.parse(fs.readFileSync('carrito.json', 'utf-8'));
-  const cartIndex = carts.findIndex((c) => c.id === cartId);
-  if (cartIndex !== -1) {
-   
-    const cart = carts[cartIndex];
-    
-    const existingProduct = cart.products.find((p) => p.id === productId);
-    if (existingProduct) {
-     
-      existingProduct.quantity += quantity;
-    } else {
-    
-      cart.products.push({ id: productId, quantity });
-    }
-    
-    fs.writeFileSync('carrito.json', JSON.stringify(carts));
+  const cart = cartManager.addProductToCart(cid, pid, quantity);
+
+  if (cart) {
     res.json(cart);
   } else {
-    res.status(404).json({ error: 'Carrito no encontrado' });
+    res.status(404).json({ error: 'Cart not found' });
   }
 });
 
-module.exports = router;
+
